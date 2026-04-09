@@ -1,0 +1,14 @@
+
+# PlaywrightJS
+PlayWrightJS/node_modules/
+PlayWrightJS/test-results/
+PlayWrightJS/playwright-report/
+PlayWrightJS/blob-report/
+PlayWrightJS/playwright/.cache/
+PlayWrightJS/playwright/.auth/
+
+# PlaywrightDotNet
+PlaywrightDotNet/bin/
+PlaywrightDotNet/obj/
+PlaywrightDotNet/test-results/
+PlaywrightDotNet/TestResults/
