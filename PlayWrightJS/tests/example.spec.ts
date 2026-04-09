@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, selectors } from '@playwright/test';
 
 test.use({ locale: 'en-GB' });
 
@@ -48,4 +48,43 @@ test("Locator alt full text", async ({ page }) => {
   await page.goto("https://github.com/StasAbrosimov");
   await page.getByAltText("Achievement: Pull Shark", { exact: true }).filter({ visible: true }).click();
   await expect(page).toHaveURL(/.*achievement=pull-shark&tab=achievements.*/, { ignoreCase: true });
+});
+
+test("Locator by locator", async ({ page }) => {
+  await page.goto("https://github.com/login");
+  var userNameLocator = page.locator("#login_field");
+  var passwordLocator = page.locator("#password");
+  await userNameLocator.click();
+  await userNameLocator.fill("UserName");
+  await passwordLocator.click();
+  await passwordLocator.fill("pswdtest1w@WW");
+  await page.locator(".js-sign-in-button").click();
+  await page.waitForTimeout(2000);
+  await expect(page.locator('.js-flash-alert')).toBeVisible();
+});
+
+test.describe("Test Id redefine", () => {
+
+  test.afterAll(async () => {
+    selectors.setTestIdAttribute("data-testid");
+    console.log("afterAll");
+  });
+
+  test("Locator by test id", async ({ page }) => {
+    selectors.setTestIdAttribute("autocomplete");
+
+    await page.goto("https://github.com/login");
+    var userNameLocator = page.getByTestId("username");
+    var passwordLocator = page.getByTestId("current-password");
+
+    await userNameLocator.fill("UserName");
+    await passwordLocator.fill("pswdtest1w@WW");
+
+    selectors.setTestIdAttribute("name");
+    await page.getByTestId("commit").click();
+    await page.waitForTimeout(250);
+
+    selectors.setTestIdAttribute("class");
+    await expect(page.getByTestId('js-flash-alert')).toBeVisible();
+  });
 });
