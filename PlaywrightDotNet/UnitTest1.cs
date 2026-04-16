@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using dotenv.net;
+using dotenv.net.Utilities;
 using Microsoft.Playwright;
 using Microsoft.Playwright.NUnit;
 using Microsoft.VisualBasic;
@@ -13,12 +15,26 @@ namespace PlaywrightTests
     [TestFixture]
     public class ExampleTest : PageTest
     {
+        private IDictionary<string, string> envVars = DotEnv.Read();
         public override BrowserNewContextOptions ContextOptions()
         {
             var context = base.ContextOptions();
             context.Locale = "en-GB";
             context.TimezoneId = "Europe/London";
             return context;
+        }
+
+        [OneTimeSetUp]
+        public void OnSetUp()
+        {
+            DotEnv.Load();
+            envVars = DotEnv.Read();
+        }
+
+        [TearDown]
+        public void AfterEach()
+        {
+            Playwright.Selectors.SetTestIdAttribute("data-testid");
         }
 
         [Test]
@@ -91,5 +107,32 @@ namespace PlaywrightTests
             await Page.GetByAltText("Achievement: Pull Shark", new() { Exact = true }).Filter(new() { Visible = true }).ClickAsync();
             await Expect(Page).ToHaveURLAsync(new Regex("achievement=pull-shark&tab=achievements"), new() { IgnoreCase = true });
         }
+
+        [Test]
+        public async Task EnvUsage()
+        {
+
+            await Page.GotoAsync(envVars["TEST_URL"]);
+
+            Playwright.Selectors.SetTestIdAttribute("autocomplete");
+            var userNameLocator = Page.GetByTestId("username");
+            var passwordLocator = Page.GetByTestId("current-password");
+
+            await userNameLocator.FillAsync(envVars["SomeUserName"]);
+            await passwordLocator.FillAsync(envVars["SomeUserPWD"]);
+
+            Playwright.Selectors.SetTestIdAttribute("name");
+            await Page.GetByTestId("commit").ClickAsync();
+            await Page.WaitForTimeoutAsync(250);
+
+            Playwright.Selectors.SetTestIdAttribute("class");
+            await Expect(Page.GetByTestId("js-flash-alert")).ToBeVisibleAsync();
+
+            Playwright.Selectors.SetTestIdAttribute("autocomplete");
+
+            await Expect(Page.GetByTestId("current-password")).ToBeEmptyAsync();
+            await Expect(Page.GetByTestId("username")).ToHaveValueAsync(envVars["SomeUserName"]);
+        }
+
     }
 }
