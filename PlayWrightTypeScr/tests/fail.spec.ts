@@ -32,6 +32,6 @@ test.describe("failTest", () => {
         selectors.setTestIdAttribute("autocomplete");
 
         await expect(page.getByTestId("current-password").first()).toBeEmpty();
-        await expect(page.getByTestId("username").first()).toHaveValue(`${process.env.SomeUserPWD}`);
+        await expect(page.getByTestId("username").first()).toHaveValue(`${process.env.SomeUserName}`);
     });
 });

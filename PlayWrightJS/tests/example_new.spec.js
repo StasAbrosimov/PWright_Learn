@@ -26,8 +26,7 @@ test('Community link', async ({ page }) => {
   await page.getByRole('link', { name: '.NET' }).first().click();
   await page.getByRole('link', { name: 'Community' }).click();
 
-  // Expects page to have a heading with the name of Installation.
-  await expect(page.getByRole('heading', { name: 'Installation' })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Community DiscordDirect link' })).toBeVisible();
 });
 
 test('Stay safe, Stay tested', async ({ page }) => {
