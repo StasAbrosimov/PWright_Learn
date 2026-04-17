@@ -18,7 +18,9 @@ namespace PlaywrightTests
     [TestFixture]
     public class ExampleTest : PageTest
     {
-        private static IDictionary<string, string> envVars = DotEnv.Read();
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
+        private static IDictionary<string, string> envVars = null;
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
         public override BrowserNewContextOptions ContextOptions()
         {
             var context = base.ContextOptions();
@@ -30,8 +32,7 @@ namespace PlaywrightTests
         [OneTimeSetUp]
         public void OnSetUp()
         {
-            DotEnv.Load();
-            envVars = DotEnv.Read();
+            envVars = DotEnv.Fluent().WithEnvFiles("./test-data/.env").Read();
         }
 
         [OneTimeTearDown]
@@ -180,14 +181,13 @@ namespace PlaywrightTests
 
         private static IEnumerable<TestData> TestDataJsonSource()
         {
-            var dataFileName = envVars == null ? "testdata.json" : envVars["TestDataJsonName"];
-            Console.WriteLine("envVars == null" + (envVars == null).ToString());
+            var dataFileName = "./test-data/testdata.json";
             return JsonDataSource<TestData>(dataFileName);
         }
 
         [Test]
         [TestCaseSource(nameof(TestDataJsonSource))]
-        public async Task DDT_json(TestData testData)
+        public async Task JsonUsageTest(TestData testData)
         {
             await Page.GotoAsync(testData.Url);
 
@@ -215,6 +215,7 @@ namespace PlaywrightTests
 
     public class TestData
     {
+#pragma warning disable CS8618
         [Newtonsoft.Json.JsonProperty("Url")]
         public string Url;
 
@@ -223,6 +224,7 @@ namespace PlaywrightTests
 
         [Newtonsoft.Json.JsonProperty("Pwd")]
         public string Pwd;
+#pragma warning restore CS8618
 
         public override string ToString()
         {
