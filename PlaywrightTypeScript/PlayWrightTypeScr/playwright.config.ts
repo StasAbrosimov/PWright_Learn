@@ -14,8 +14,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env') });
  */
 export default defineConfig({
 
-  globalSetup: './global/setup.ts',
-  globalTeardown: './global/teardown.ts',
+  //globalSetup: './global/setup.ts',
+  //globalTeardown: './global/teardown.ts',
 
   testDir: './tests',
   /* Run tests in files in parallel */
@@ -49,7 +49,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'] },
     },
 
-    {
+    /*{
       name: 'firefox',
       use: { ...devices['Desktop Firefox'] },
     },
@@ -59,6 +59,7 @@ export default defineConfig({
       use: { ...devices['Desktop Safari'] },
     },
 
+    // */
     /* Test against mobile viewports. */
     // {
     //   name: 'Mobile Chrome',
