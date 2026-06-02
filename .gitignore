@@ -1,27 +1,27 @@
 
 # PlaywrightJS
-PlayWrightJS/node_modules/
-PlayWrightJS/test-results/
-PlayWrightJS/playwright-report/
-PlayWrightJS/blob-report/
-PlayWrightJS/playwright/.cache/
-PlayWrightJS/playwright/.auth/
+node_modules/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+playwright/.auth/
 
 # PlaywrightDotNet
-PlaywrightDotNet/bin/
-PlaywrightDotNet/obj/
-PlaywrightDotNet/test-results/
-PlaywrightDotNet/TestResults/
+bin/
+obj/
+test-results/
+TestResults/
 
 #env
 .env
 
 # Playwright
 node_modules/
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
-/playwright/.auth/
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+playwright/.auth/
 test-data/
 testdata*
