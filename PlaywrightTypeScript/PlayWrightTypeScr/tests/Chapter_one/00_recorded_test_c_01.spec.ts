@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test('test', async ({ page }) => {
+test('first recorded test. Fail login', async ({ page }) => {
   await test.step("Navigate to github sign in", async () => {
     await page.goto('https://github.com/');
     await page.getByRole('link', { name: 'Sign in' }).click();
