@@ -1,4 +1,4 @@
-import { test, expect, Page } from '@playwright/test';
+import { test, expect, Page, Locator } from '@playwright/test';
 import config from './../../playwright.config';
 
 
@@ -106,4 +106,63 @@ test.describe("Local redefining of 'testIdAtribute'", () => {
 
     });
 
+});
+
+test('GetByText sign up', async ({ page }) => {
+    page = await openGitHubAFunc(page);
+
+    await page.getByText("Sign up").click()
+
+    await expect(page.url()).toContain('signup?')
+});
+
+
+const openYoutubePWFunc = async (fPage: Page): Promise<Page> => {
+    await fPage.goto('https://www.youtube.com/@Playwrightdev');
+    return fPage;
+};
+
+const searchInInputInLocatorF = async (locator: Locator, searchText: string): Promise<void> => {
+    await locator.click();
+    await locator.fill(searchText);
+    await locator.press("Enter");
+};
+
+
+test('Placeholder on youtube', async ({ page }) => {
+    page = await openYoutubePWFunc(page);
+
+    const searchLocator = await page.getByPlaceholder('Search', { exact: true });
+    const searchText = 'Me at the zoo';
+
+    await searchInInputInLocatorF(searchLocator, searchText)
+
+    const pageTitle = await page.title();
+    await expect(pageTitle).toContain(searchText);
+});
+
+test('Xpath on youtube search', async ({ page }) => {
+    page = await openYoutubePWFunc(page);
+
+    const searchLocator = await page.locator('//input[@name="search_query"]');
+    const searchText = 'Me at the zoo';
+
+    await searchInInputInLocatorF(searchLocator, searchText);
+
+    const pageTitle = await page.title();
+    await expect(pageTitle).toContain(searchText);
+});
+
+test('CSS find on github', async ({ page }) => {
+    page = await openGitHubAFunc(page);
+
+    await page.locator('img[alt="Achievement: Arctic Code Vault Contributor"]:visible').click();
+    await expect(page.url()).toContain('achievement=arctic-code-vault-contributor');
+});
+
+test('Get by title', async ({ page }) => {
+    await page.goto('https://playwright.dev/docs/intro');
+    await page.getByTitle('Release notes', { exact: true }).click();
+
+    await expect(page.url()).toContain('docs/release-notes');
 });
