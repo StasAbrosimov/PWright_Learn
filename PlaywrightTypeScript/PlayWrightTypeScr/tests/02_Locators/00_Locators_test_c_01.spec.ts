@@ -1,7 +1,17 @@
 import { test, expect, Page } from '@playwright/test';
+import config from './../../playwright.config';
+
+
+const startingUrl = 'https://github.com/StasAbrosimov';
+
+
+const openGitHubAFunc = async (fPage: Page): Promise<Page> => {
+    await fPage.goto(startingUrl);
+    return fPage;
+};
 
 test("locators get by role", async ({ page }) => {
-    await page.goto('https://github.com/StasAbrosimov/');
+    page = await openGitHubAFunc(page);
 
     //link
     await page.getByRole('link', { name: 'Sign In' }).click()
@@ -48,23 +58,51 @@ test.describe("Local redefining of 'testIdAtribute'", () => {
         return fPage;
     };
 
-    test('profile tab navigation check', async ({ page }) => {
-        await page.goto('https://github.com/StasAbrosimov/');
+    const tabNavigationCheckFunc = async (fPage: Page, tabName: string, urlContainPart?: string | undefined | null) => {
+        if (!urlContainPart) {
+            urlContainPart = tabName;
+        }
 
-        page = await openTabFunc(page, 'repositories');
-        await expect(page.url()).toContain("repositories");
+        fPage = await openTabFunc(fPage, tabName);
+        await expect(fPage.url()).toContain(urlContainPart);
 
-        page = await openTabFunc(page, 'projects');
-        await expect(page.url()).toContain("projects");
+        return fPage;
+    }
 
-        page = await openTabFunc(page, 'packages');
-        await expect(page.url()).toContain("packages");
+    test('repositories tab navigation check', async ({ page }) => {
 
-        page = await openTabFunc(page, 'stars');
-        await expect(page.url()).toContain("stars");
+        page = await openGitHubAFunc(page);
+
+        page = await tabNavigationCheckFunc(page, 'repositories');
+    });
+
+    test('projects tab navigation check', async ({ page }) => {
+        page = await openGitHubAFunc(page);
+
+        page = await tabNavigationCheckFunc(page, 'projects');
+    });
+
+    test('packages tab navigation check', async ({ page }) => {
+        page = await openGitHubAFunc(page);
+
+        page = await tabNavigationCheckFunc(page, 'packages');
+    });
+
+    test('stars tab navigation check', async ({ page }) => {
+
+        page = await openGitHubAFunc(page);
+
+        page = await tabNavigationCheckFunc(page, 'stars');
+    });
+
+    test('overview tab navigation check', async ({ page }) => {
+
+        page = await openGitHubAFunc(page);
+        page = await tabNavigationCheckFunc(page, 'stars');
+
 
         page = await openTabFunc(page, 'overview');
-        await expect(page.url()).toEqual("https://github.com/StasAbrosimov");
+        await expect(page.url()).toEqual(startingUrl);
 
     });
 
