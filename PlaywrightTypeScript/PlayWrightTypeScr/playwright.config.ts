@@ -23,9 +23,9 @@ export default defineConfig({
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
   /* Retry on CI only */
-  retries: process.env.CI ? 2 : 1,
+  retries: process.env.CI ? 3 : 2,
   /* Opt out of parallel tests on CI. */
-  workers: process.env.CI ? 1 : undefined,
+  workers: process.env.CI ? 2 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
@@ -35,11 +35,12 @@ export default defineConfig({
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
-    screenshot: "only-on-failure",
-    headless: true,
+    screenshot: 'on-first-failure',
+    headless: process.env.CI ? true : false,
     locale: 'en-GB',
     timezoneId: 'Europe/London',
-    testIdAttribute: 'data-testid',
+    testIdAttribute: 'data-testid', // some default test id
+    //testIdAttribute: 'data-tab-item' //github profile tab item attribute
   },
 
   /* Configure projects for major browsers */
